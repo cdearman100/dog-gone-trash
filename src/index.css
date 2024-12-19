@@ -76,7 +76,7 @@ button:disabled {
 nav {
   display: flex;
   justify-content: space-around;
-  background-color: #f8f9fa;
+  background-color: #007bff;
   padding: 10px 0;
   border-top: 1px solid #ddd;
 }
