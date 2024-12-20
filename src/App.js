@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { AuthProvider, AuthContext } from './components/AuthProvider';
 import LoginPage from './components/LoginPage';
+import EmployeeLoginPage from './components/EmployeeLoginPage';
 import HomePage from './components/HomePage';
 import RewardsPage from './components/RewardsPage';
 import LocationsPage from './components/LocationsPage';
@@ -8,6 +9,7 @@ import ImpactPage from './components/ImpactPage';
 import ProfilePage from './components/ProfilePage';
 import SchedulePickupPage from './components/SchedulePickupPage';
 import CommunityPage from './components/CommunityPage';
+import EmployeeOnlyPage from './components/EmployeeOnlyPage';
 import './index.css';
 
 const DogGoneTrashApp = () => {
@@ -15,8 +17,19 @@ const DogGoneTrashApp = () => {
   const { user } = useContext(AuthContext);
 
   const renderContent = () => {
-    if (!user) return <LoginPage />;
+    if (!user && activeTab === 'employee') {
+      // If user not logged in and tries to go to employee section,
+      // show the EmployeeLoginPage
+      return <EmployeeLoginPage />;
+    }
 
+    if (!user) {
+      // If user is not logged in and not trying to access employee section,
+      // show general LoginPage
+      return <LoginPage />;
+    }
+
+    // If user is logged in:
     switch (activeTab) {
       case 'home':
         return <HomePage setActiveTab={setActiveTab} />;
@@ -32,6 +45,8 @@ const DogGoneTrashApp = () => {
         return <SchedulePickupPage />;
       case 'community':
         return <CommunityPage />;
+      case 'employee':
+        return <EmployeeOnlyPage />;
       default:
         return null;
     }
@@ -44,6 +59,7 @@ const DogGoneTrashApp = () => {
         <button onClick={() => setActiveTab('home')}>Home</button>
         <button onClick={() => setActiveTab('rewards')}>Rewards</button>
         <button onClick={() => setActiveTab('locations')}>Locations</button>
+        <button onClick={() => setActiveTab('employee')}>Employee</button>
       </nav>
     </div>
   );
