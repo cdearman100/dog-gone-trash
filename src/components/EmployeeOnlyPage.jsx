@@ -1,474 +1,187 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
-  Users, Truck, Calendar, ClipboardList, Bell, Settings,
-  ChevronRight, Search, Filter, MapPin, PhoneCall, Clock
+  Truck,
+  CheckCircle,
+  Clock,
+  AlertCircle,
+  Calendar,
+  MapPin,
+  User,
+  Phone,
+  Mail,
+  ChevronRight
 } from 'lucide-react';
 
-// Employee Context
-const EmployeeContext = React.createContext(null);
-
-// Mock employee data
-const MOCK_EMPLOYEE = {
-  id: 'EMP001',
-  name: 'John Smith',
-  role: 'Route Manager',
-  assignedArea: 'Downtown District',
-  contactNumber: '555-0123'
-};
-
-// Employee Provider Component
-const EmployeeProvider = ({ children }) => {
-  const [employee] = useState(MOCK_EMPLOYEE);
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // For demo, assume always authenticated
-
-  return (
-    <EmployeeContext.Provider value={{ employee, isAuthenticated }}>
-      {children}
-    </EmployeeContext.Provider>
-  );
-};
-
-// Placeholder Employee Login Component
-const EmployeeLogin = () => (
-  <div className="p-6">
-    <h1 className="text-2xl font-bold mb-6 text-center">Employee Login</h1>
-    <p>This is a placeholder login. In a real app, add a login form and logic here.</p>
-  </div>
-);
-
-// Placeholder Reports Section Component
-const ReportsSection = () => (
-  <div>
-    <h2 className="text-2xl font-bold mb-6">Reports</h2>
-    <p>Reports coming soon...</p>
-  </div>
-);
-
-// Placeholder Recent Activity List
-const RecentActivityList = () => (
-  <div className="space-y-3">
-    {[1, 2, 3].map(i => (
-      <div key={i} className="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
-        <div className="font-medium">Customer #{i} made a request</div>
-        <span className="text-sm text-gray-600">A few minutes ago</span>
-      </div>
-    ))}
-  </div>
-);
-
-// Placeholder Upcoming Pickups List
-const UpcomingPickupsList = () => (
-  <div className="space-y-3">
-    {[1, 2, 3].map(i => (
-      <div key={i} className="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
-        <div className="flex items-center space-x-3">
-          <Clock className="text-gray-400" />
-          <div>
-            <div className="font-medium">Pickup #{i}</div>
-            <div className="text-sm text-gray-600">123 Main St</div>
-          </div>
-        </div>
-        <span className="text-sm text-gray-600">In 2 hours</span>
-      </div>
-    ))}
-  </div>
-);
-
-// Main Employee Dashboard Component
-const EmployeeDashboard = () => {
-  const [activeSection, setActiveSection] = useState('overview');
-  const { employee, isAuthenticated } = React.useContext(EmployeeContext);
-
-  if (!isAuthenticated) {
-    return <EmployeeLogin />;
-  }
-
-  const renderContent = () => {
-    switch(activeSection) {
-      case 'overview':
-        return <OverviewSection />;
-      case 'routes':
-        return <RoutesSection />;
-      case 'schedule':
-        return <ScheduleSection />;
-      case 'customers':
-        return <CustomerSection />;
-      case 'reports':
-        return <ReportsSection />;
-      default:
-        return <OverviewSection />;
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-blue-600 text-white p-4">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <h1 className="text-xl font-bold">Employee Portal</h1>
-            <span className="text-sm bg-blue-700 px-2 py-1 rounded">
-              {employee.role}
-            </span>
-          </div>
-          <div className="flex items-center space-x-4">
-            <Bell className="w-5 h-5" />
-            <Settings className="w-5 h-5" />
-            <div className="flex items-center">
-              <span className="mr-2">{employee.name}</span>
-              <div className="w-8 h-8 bg-blue-800 rounded-full flex items-center justify-center">
-                {employee.name.charAt(0)}
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <div className="flex">
-        {/* Sidebar Navigation */}
-        <div className="w-64 bg-white h-screen shadow-lg p-4">
-          <SidebarButton
-            icon={<Users />}
-            label="Overview"
-            active={activeSection === 'overview'}
-            onClick={() => setActiveSection('overview')}
-          />
-          <SidebarButton
-            icon={<Truck />}
-            label="Routes"
-            active={activeSection === 'routes'}
-            onClick={() => setActiveSection('routes')}
-          />
-          <SidebarButton
-            icon={<Calendar />}
-            label="Schedule"
-            active={activeSection === 'schedule'}
-            onClick={() => setActiveSection('schedule')}
-          />
-          <SidebarButton
-            icon={<ClipboardList />}
-            label="Customers"
-            active={activeSection === 'customers'}
-            onClick={() => setActiveSection('customers')}
-          />
-          <SidebarButton
-            icon={<Bell />}
-            label="Reports"
-            active={activeSection === 'reports'}
-            onClick={() => setActiveSection('reports')}
-          />
-        </div>
-
-        {/* Main Content Area */}
-        <div className="flex-1 p-6">
-          {renderContent()}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Overview Section Component
-const OverviewSection = () => {
-  const { employee } = React.useContext(EmployeeContext);
-  const [todayStats] = useState({
-    pendingPickups: 12,
-    completedPickups: 8,
-    activeCustomers: 45,
-    reportedIssues: 2
+const EmployeeOnlyPage = () => {
+  const [activeView, setActiveView] = useState('today');
+ 
+  // Mock data for pickups
+  const [pickups] = useState({
+    pending: [
+      {
+        id: 1,
+        customer: "Sarah Johnson",
+        address: "123 Main St",
+        time: "10:00 AM",
+        phone: "555-0123",
+        email: "sarah@example.com",
+        notes: "Please use side gate"
+      },
+      {
+        id: 2,
+        customer: "Mike Smith",
+        address: "456 Oak Ave",
+        time: "2:30 PM",
+        phone: "555-0124",
+        email: "mike@example.com",
+        notes: "Large items"
+      }
+    ],
+    completed: [
+      {
+        id: 3,
+        customer: "Emma Davis",
+        address: "789 Pine Rd",
+        time: "9:00 AM",
+        phone: "555-0125",
+        email: "emma@example.com",
+        notes: "Completed at 9:45 AM"
+      }
+    ]
   });
 
-  return (
-    <div>
-      <h2 className="text-2xl font-bold mb-6">Daily Overview</h2>
+  // Stats for the day
+  const stats = {
+    completed: 5,
+    pending: 3,
+    totalTime: "6.5 hrs",
+    efficiency: "92%"
+  };
 
-      <div className="grid grid-cols-4 gap-4 mb-6">
-        <StatCard
-          title="Pending Pickups"
-          value={todayStats.pendingPickups}
-          icon={<Truck className="text-blue-500" />}
-        />
-        <StatCard
-          title="Completed Today"
-          value={todayStats.completedPickups}
-          icon={<Clock className="text-green-500" />}
-        />
-        <StatCard
-          title="Active Customers"
-          value={todayStats.activeCustomers}
-          icon={<Users className="text-purple-500" />}
-        />
-        <StatCard
-          title="Reported Issues"
-          value={todayStats.reportedIssues}
-          icon={<Bell className="text-red-500" />}
-        />
+  const renderPickupCard = (pickup, status) => (
+    <div key={pickup.id} className="bg-white rounded-lg shadow mb-4 p-4">
+      <div className="flex justify-between items-start mb-3">
+        <div>
+          <h3 className="font-semibold text-lg">{pickup.customer}</h3>
+          <div className="flex items-center text-gray-600 mt-1">
+            <MapPin size={16} className="mr-1" />
+            <span>{pickup.address}</span>
+          </div>
+        </div>
+        <span className={`px-3 py-1 rounded-full text-sm ${
+          status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
+        }`}>
+          {status === 'pending' ? 'Pending' : 'Completed'}
+        </span>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="font-semibold mb-4">Upcoming Pickups</h3>
-          <UpcomingPickupsList />
+      <div className="grid grid-cols-2 gap-2 text-sm">
+        <div className="flex items-center text-gray-600">
+          <Clock size={16} className="mr-1" />
+          <span>{pickup.time}</span>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="font-semibold mb-4">Recent Customer Activity</h3>
-          <RecentActivityList />
+        <div className="flex items-center text-gray-600">
+          <Phone size={16} className="mr-1" />
+          <span>{pickup.phone}</span>
+        </div>
+        <div className="flex items-center text-gray-600">
+          <Mail size={16} className="mr-1" />
+          <span>{pickup.email}</span>
+        </div>
+        <div className="flex items-center text-gray-600">
+          <User size={16} className="mr-1" />
+          <span>Regular pickup</span>
         </div>
       </div>
+
+      {pickup.notes && (
+        <div className="mt-3 text-sm bg-gray-50 p-2 rounded">
+          <span className="font-medium">Notes: </span>
+          {pickup.notes}
+        </div>
+      )}
+
+      {status === 'pending' && (
+        <div className="mt-4 flex justify-end space-x-2">
+          <button className="px-4 py-2 bg-green-500 text-white rounded-lg flex items-center">
+            <CheckCircle size={16} className="mr-1" />
+            Mark Complete
+          </button>
+          <button className="px-4 py-2 bg-red-500 text-white rounded-lg flex items-center">
+            <AlertCircle size={16} className="mr-1" />
+            Report Issue
+          </button>
+        </div>
+      )}
     </div>
   );
-};
-
-// Routes Section Component
-const RoutesSection = () => {
-  const [routes] = useState([
-    {
-      id: 1,
-      area: 'North District',
-      stops: 8,
-      estimatedTime: '2.5 hours',
-      status: 'In Progress'
-    },
-    {
-      id: 2,
-      area: 'Downtown Core',
-      stops: 12,
-      estimatedTime: '3 hours',
-      status: 'Pending'
-    }
-  ]);
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Route Management</h2>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded">
-          Create New Route
+    <div className="p-4 pb-20">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">Employee Dashboard</h1>
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center">
+          <Truck size={16} className="mr-1" />
+          Start Route
         </button>
       </div>
 
-      <div className="bg-white rounded-lg shadow">
-        <div className="p-4">
-          <div className="flex items-center space-x-4 mb-4">
-            <Search className="text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search routes..."
-              className="flex-1 p-2 border rounded"
-            />
-            <Filter className="text-gray-400" />
-          </div>
+      {/* Stats Overview */}
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="bg-green-100 p-4 rounded-lg">
+          <div className="text-green-800 text-sm">Completed Today</div>
+          <div className="text-2xl font-bold">{stats.completed}</div>
         </div>
+        <div className="bg-yellow-100 p-4 rounded-lg">
+          <div className="text-yellow-800 text-sm">Pending</div>
+          <div className="text-2xl font-bold">{stats.pending}</div>
+        </div>
+        <div className="bg-blue-100 p-4 rounded-lg">
+          <div className="text-blue-800 text-sm">Total Time</div>
+          <div className="text-2xl font-bold">{stats.totalTime}</div>
+        </div>
+        <div className="bg-purple-100 p-4 rounded-lg">
+          <div className="text-purple-800 text-sm">Efficiency</div>
+          <div className="text-2xl font-bold">{stats.efficiency}</div>
+        </div>
+      </div>
 
-        <div className="border-t">
-          {routes.map(route => (
-            <div key={route.id} className="p-4 border-b hover:bg-gray-50">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="font-semibold">{route.area}</h3>
-                  <div className="text-sm text-gray-600 mt-1">
-                    {route.stops} stops • {route.estimatedTime}
-                  </div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <span
-                    className={`px-2 py-1 rounded text-sm ${
-                      route.status === 'In Progress' 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-yellow-100 text-yellow-800'
-                    }`}
-                  >
-                    {route.status}
-                  </span>
-                  <button className="text-blue-500 hover:bg-blue-50 p-2 rounded">
-                    View Details
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* View Toggle */}
+      <div className="flex mb-6 bg-gray-100 rounded-lg p-1">
+        <button
+          className={`flex-1 py-2 rounded-lg text-center ${
+            activeView === 'today' ? 'bg-white shadow' : ''
+          }`}
+          onClick={() => setActiveView('today')}
+        >
+          Today's Pickups
+        </button>
+        <button
+          className={`flex-1 py-2 rounded-lg text-center ${
+            activeView === 'completed' ? 'bg-white shadow' : ''
+          }`}
+          onClick={() => setActiveView('completed')}
+        >
+          Completed
+        </button>
+      </div>
+
+      {/* Pickup Lists */}
+      <div>
+        {activeView === 'today' ? (
+          <>
+            <h2 className="text-lg font-semibold mb-4">Pending Pickups</h2>
+            {pickups.pending.map(pickup => renderPickupCard(pickup, 'pending'))}
+          </>
+        ) : (
+          <>
+            <h2 className="text-lg font-semibold mb-4">Completed Pickups</h2>
+            {pickups.completed.map(pickup => renderPickupCard(pickup, 'completed'))}
+          </>
+        )}
       </div>
     </div>
   );
 };
-
-// Schedule Section Component
-const ScheduleSection = () => {
-  const [schedule] = useState([
-    {
-      id: 1,
-      time: '9:00 AM',
-      customer: 'Alice Johnson',
-      address: '123 Main St',
-      type: 'Regular Pickup'
-    },
-    {
-      id: 2,
-      time: '10:30 AM',
-      customer: 'Bob Smith',
-      address: '456 Oak Ave',
-      type: 'Special Request'
-    }
-  ]);
-
-  return (
-    <div>
-      <h2 className="text-2xl font-bold mb-6">Daily Schedule</h2>
-
-      <div className="bg-white rounded-lg shadow">
-        <div className="p-4 border-b">
-          <div className="flex space-x-4">
-            <button className="bg-blue-500 text-white px-4 py-2 rounded">Today</button>
-            <button className="text-gray-600 px-4 py-2">Tomorrow</button>
-            <button className="text-gray-600 px-4 py-2">Next Week</button>
-          </div>
-        </div>
-
-        <div>
-          {schedule.map(appointment => (
-            <div key={appointment.id} className="p-4 border-b hover:bg-gray-50">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-4">
-                  <div className="text-lg font-semibold">
-                    {appointment.time}
-                  </div>
-                  <div>
-                    <div className="font-medium">{appointment.customer}</div>
-                    <div className="text-sm text-gray-600">
-                      {appointment.address}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <span className="text-sm text-gray-600">
-                    {appointment.type}
-                  </span>
-                  <button className="text-blue-500 hover:bg-blue-50 p-2 rounded">
-                    View Details
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Customer Section Component
-const CustomerSection = () => {
-  const [customers] = useState([
-    {
-      id: 1,
-      name: 'Alice Johnson',
-      status: 'Active',
-      pickupFrequency: 'Weekly',
-      lastPickup: '2024-12-15'
-    },
-    {
-      id: 2,
-      name: 'Bob Smith',
-      status: 'Pending',
-      pickupFrequency: 'Bi-weekly',
-      lastPickup: '2024-12-10'
-    }
-  ]);
-
-  return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Customer Management</h2>
-        <div className="flex space-x-4">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded">
-            Add Customer
-          </button>
-          <button className="border border-gray-300 px-4 py-2 rounded">
-            Export List
-          </button>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-lg shadow">
-        <div className="p-4">
-          <div className="flex items-center space-x-4">
-            <Search className="text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search customers..."
-              className="flex-1 p-2 border rounded"
-            />
-            <Filter className="text-gray-400" />
-          </div>
-        </div>
-
-        <table className="w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-2 text-left">Customer</th>
-              <th className="px-4 py-2 text-left">Status</th>
-              <th className="px-4 py-2 text-left">Pickup Frequency</th>
-              <th className="px-4 py-2 text-left">Last Pickup</th>
-              <th className="px-4 py-2 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {customers.map(customer => (
-              <tr key={customer.id} className="border-t hover:bg-gray-50">
-                <td className="px-4 py-3">{customer.name}</td>
-                <td className="px-4 py-3">
-                  <span className={`px-2 py-1 rounded text-sm ${
-                    customer.status === 'Active' 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-yellow-100 text-yellow-800'
-                  }`}>
-                    {customer.status}
-                  </span>
-                </td>
-                <td className="px-4 py-3">{customer.pickupFrequency}</td>
-                <td className="px-4 py-3">{customer.lastPickup}</td>
-                <td className="px-4 py-3">
-                  <button className="text-blue-500 hover:bg-blue-50 p-2 rounded">
-                    View Details
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-};
-
-// Utility Components
-const StatCard = ({ title, value, icon }) => (
-  <div className="bg-white p-4 rounded-lg shadow">
-    <div className="flex justify-between items-center mb-2">
-      <h3 className="text-gray-600">{title}</h3>
-      {icon}
-    </div>
-    <p className="text-2xl font-bold">{value}</p>
-  </div>
-);
-
-const SidebarButton = ({ icon, label, active, onClick }) => (
-  <button
-    onClick={onClick}
-    className={`w-full flex items-center space-x-3 p-3 rounded mb-2 ${
-      active ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'
-    }`}
-  >
-    {icon}
-    <span>{label}</span>
-  </button>
-);
-
-// The main EmployeeOnlyPage component that you can integrate into your app
-const EmployeeOnlyPage = () => (
-  <EmployeeProvider>
-    <EmployeeDashboard />
-  </EmployeeProvider>
-);
 
 export default EmployeeOnlyPage;

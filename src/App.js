@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthProvider, AuthContext } from './components/AuthProvider';
 import LoginPage from './components/LoginPage';
 import EmployeeLoginPage from './components/EmployeeLoginPage';
@@ -10,6 +11,7 @@ import ProfilePage from './components/ProfilePage';
 import SchedulePickupPage from './components/SchedulePickupPage';
 import CommunityPage from './components/CommunityPage';
 import EmployeeOnlyPage from './components/EmployeeOnlyPage';
+import AdminApp from './components/admin/AdminApp'; 
 import './index.css';
 
 const DogGoneTrashApp = () => {
@@ -70,5 +72,22 @@ const App = () => (
     <DogGoneTrashApp />
   </AuthProvider>
 );
+
+
+// const App = () => (
+//     <AuthProvider>
+//       <Router>
+//         <Routes>
+//           {/* Admin route */}
+//           <Route path="/admin" element={<AdminApp/>} />
+          
+//           {/* Main app route */}
+//           <Route path="/dog-gone-trash" element={<DogGoneTrashApp/>} />
+          
+//           <Route path="*" element={<p>Path not resolved</p>} />
+//         </Routes>
+//       </Router>
+//     </AuthProvider>
+// );
 
 export default App;
