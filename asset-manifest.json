@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/dog-gone-trash/static/css/main.93c98965.css",
-    "main.js": "/dog-gone-trash/static/js/main.9aa167b6.js",
+    "main.js": "/dog-gone-trash/static/js/main.cc833e2c.js",
     "static/js/488.6a281e19.chunk.js": "/dog-gone-trash/static/js/488.6a281e19.chunk.js",
     "index.html": "/dog-gone-trash/index.html",
     "main.93c98965.css.map": "/dog-gone-trash/static/css/main.93c98965.css.map",
-    "main.9aa167b6.js.map": "/dog-gone-trash/static/js/main.9aa167b6.js.map",
+    "main.cc833e2c.js.map": "/dog-gone-trash/static/js/main.cc833e2c.js.map",
     "488.6a281e19.chunk.js.map": "/dog-gone-trash/static/js/488.6a281e19.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.93c98965.css",
-    "static/js/main.9aa167b6.js"
+    "static/js/main.cc833e2c.js"
   ]
 }
