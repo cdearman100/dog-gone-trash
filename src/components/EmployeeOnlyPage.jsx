@@ -10,7 +10,6 @@ import {
   Mail,
   Loader2
 } from 'lucide-react';
-import { Card } from '@/components/ui/card';
 
 // Mock Data
 const initialMockPickups = {
@@ -93,7 +92,7 @@ const PickupCard = ({ pickup, status, onComplete, onReportIssue }) => {
   };
 
   return (
-    <Card className="bg-white rounded-lg shadow mb-4 p-4">
+    <div className="bg-white rounded-lg shadow mb-4 p-4">
       <div className="flex justify-between items-start mb-3">
         <div>
           <h3 className="font-semibold text-lg">{pickup.customer}</h3>
@@ -102,9 +101,13 @@ const PickupCard = ({ pickup, status, onComplete, onReportIssue }) => {
             <span>{pickup.address}</span>
           </div>
         </div>
-        <span className={`px-3 py-1 rounded-full text-sm ${
-          status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
-        }`}>
+        <span
+          className={`px-3 py-1 rounded-full text-sm ${
+            status === 'pending'
+              ? 'bg-yellow-100 text-yellow-800'
+              : 'bg-green-100 text-green-800'
+          }`}
+        >
           {status === 'pending' ? 'Pending' : 'Completed'}
         </span>
       </div>
@@ -160,7 +163,7 @@ const PickupCard = ({ pickup, status, onComplete, onReportIssue }) => {
           </button>
         </div>
       )}
-    </Card>
+    </div>
   );
 };
 
@@ -172,22 +175,22 @@ const EmployeeOnlyPage = () => {
 
   const handleComplete = async (pickupId) => {
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-   
-    setPickups(prev => {
-      const completedPickup = prev.pending.find(p => p.id === pickupId);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    setPickups((prev) => {
+      const completedPickup = prev.pending.find((p) => p.id === pickupId);
       const updatedPickup = {
         ...completedPickup,
         notes: `${completedPickup.notes}\nCompleted at ${new Date().toLocaleTimeString()}`
       };
 
       return {
-        pending: prev.pending.filter(p => p.id !== pickupId),
+        pending: prev.pending.filter((p) => p.id !== pickupId),
         completed: [updatedPickup, ...prev.completed]
       };
     });
 
-    setStats(prev => ({
+    setStats((prev) => ({
       ...prev,
       completed: prev.completed + 1,
       pending: prev.pending - 1
@@ -202,7 +205,7 @@ const EmployeeOnlyPage = () => {
   const handleStartRoute = async () => {
     setIsStartingRoute(true);
     // Simulate route initialization
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 1500));
     setIsStartingRoute(false);
   };
 
@@ -211,7 +214,7 @@ const EmployeeOnlyPage = () => {
       <h2 className="text-lg font-semibold mb-4">
         {status === 'pending' ? 'Pending Pickups' : 'Completed Pickups'}
       </h2>
-      {pickups.map(pickup => (
+      {pickups.map((pickup) => (
         <PickupCard
           key={pickup.id}
           pickup={pickup}
@@ -299,6 +302,5 @@ const EmployeeOnlyPage = () => {
     </div>
   );
 };
-
 
 export default EmployeeOnlyPage;
