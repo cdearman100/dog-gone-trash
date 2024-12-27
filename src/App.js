@@ -67,27 +67,27 @@ const DogGoneTrashApp = () => {
   );
 };
 
-const App = () => (
-  <AuthProvider>
-    <DogGoneTrashApp />
-  </AuthProvider>
-);
-
-
 // const App = () => (
-//     <AuthProvider>
-//       <Router>
-//         <Routes>
-//           {/* Admin route */}
-//           <Route path="/admin" element={<AdminApp/>} />
-          
-//           {/* Main app route */}
-//           <Route path="/dog-gone-trash" element={<DogGoneTrashApp/>} />
-          
-//           <Route path="*" element={<p>Path not resolved</p>} />
-//         </Routes>
-//       </Router>
-//     </AuthProvider>
+//   <AuthProvider>
+//     <DogGoneTrashApp />
+//   </AuthProvider>
 // );
+
+
+const App = () => (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Admin route */}
+          <Route path="/admin" element={<AdminApp/>} />
+          
+          {/* Main app route */}
+          <Route path="/" element={<DogGoneTrashApp/>} />
+          
+          <Route path="*" element={<p>Path not resolved</p>} />
+        </Routes>
+      </Router>
+    </AuthProvider>
+);
 
 export default App;
