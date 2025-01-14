@@ -6,6 +6,7 @@ const BASE_API_URL = process.env.REACT_APP_API_URL
   : 'http://127.0.0.1:8000/api/';
 
 export const getUsers = async (headers = {}) => {
+  console.log("Fetching users from:", `${BASE_API_URL}users/`);
   const response = await axios.get(`${BASE_API_URL}users/`, { headers });
   return response.data;
 };
