@@ -11,27 +11,22 @@ import ProfilePage from './components/ProfilePage';
 import SchedulePickupPage from './components/SchedulePickupPage';
 import CommunityPage from './components/CommunityPage';
 import EmployeeOnlyPage from './components/EmployeeOnlyPage';
-import AdminApp from './components/admin/AdminApp'; 
+import AdminPanel from './components/admin/AdminPanel'; 
 import './index.css';
 
 const DogGoneTrashApp = () => {
   const [activeTab, setActiveTab] = useState('home');
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
 
   const renderContent = () => {
     if (!user && activeTab === 'employee') {
-      // If user not logged in and tries to go to employee section,
-      // show the EmployeeLoginPage
       return <EmployeeLoginPage />;
     }
 
     if (!user) {
-      // If user is not logged in and not trying to access employee section,
-      // show general LoginPage
       return <LoginPage />;
     }
 
-    // If user is logged in:
     switch (activeTab) {
       case 'home':
         return <HomePage setActiveTab={setActiveTab} />;
@@ -62,32 +57,25 @@ const DogGoneTrashApp = () => {
         <button onClick={() => setActiveTab('rewards')}>Rewards</button>
         <button onClick={() => setActiveTab('locations')}>Locations</button>
         <button onClick={() => setActiveTab('employee')}>Employee</button>
+        {user && (
+          <button onClick={logout} className="text-red-500">
+            Logout
+          </button>
+        )}
       </nav>
     </div>
   );
 };
 
-// const App = () => (
-//   <AuthProvider>
-//     <DogGoneTrashApp />
-//   </AuthProvider>
-// );
-
-
 const App = () => (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          {/* Admin route */}
-          <Route path="/admin" element={<AdminApp/>} />
-          
-          {/* Main app route */}
-          <Route path="/" element={<DogGoneTrashApp/>} />
-          
-          <Route path="*" element={<p>Path not resolved</p>} />
-        </Routes>
-      </Router>
-    </AuthProvider>
+  <AuthProvider>
+    <Router>
+      <Routes>
+        <Route path="/" element={<DogGoneTrashApp />} />
+        <Route path="/admin/*" element={<AdminPanel />} />
+      </Routes>
+    </Router>
+  </AuthProvider>
 );
 
 export default App;

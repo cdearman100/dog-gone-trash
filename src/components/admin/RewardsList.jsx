@@ -1,18 +1,30 @@
-// RewardsList.jsx
-import React from 'react';
-import { List, Datagrid, TextField, EditButton, TextInput, FilterForm } from 'react-admin';
+import React, { useEffect, useState } from 'react';
+import { getRewards } from '../api/rewardsApi';
 
-const RewardsFilters = [
-  <TextInput source="q" label="Search" alwaysOn />,
-];
+const RewardsList = () => {
+    const [rewards, setRewards] = useState([]);
 
-export const RewardsList = (props) => (
-  <List {...props} filters={ <FilterForm filters={RewardsFilters} /> }>
-    <Datagrid rowClick="edit">
-      <TextField source="id" />
-      <TextField source="name" label="Reward Name" />
-      <TextField source="cost" label="Credit Cost" />
-      <EditButton />
-    </Datagrid>
-  </List>
-);
+    useEffect(() => {
+        const fetchRewards = async () => {
+            const data = await getRewards();
+            setRewards(data);
+        };
+
+        fetchRewards();
+    }, []);
+
+    return (
+        <div>
+            <h1>Rewards</h1>
+            <ul>
+                {rewards.map((reward) => (
+                    <li key={reward.id}>
+                        {reward.name} - {reward.points} points
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+};
+
+export default RewardsList;

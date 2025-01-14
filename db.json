@@ -1,0 +1,19 @@
+{
+  "rewards": [
+    {
+      "name": "Local Donut Shop Discount",
+      "cost": 100,
+      "id": 1
+    },
+    {
+      "id": 2,
+      "name": "Grocery Store Voucher",
+      "cost": 250
+    },
+    {
+      "id": 3,
+      "name": "Eco-friendly Water Bottle",
+      "cost": 500
+    }
+  ]
+}

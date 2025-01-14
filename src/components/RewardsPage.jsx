@@ -1,17 +1,37 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from './AuthProvider';
+import { getRewards } from '../api/rewardsApi'; // Import the API utility function
 
 const RewardsPage = () => {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext); // Get user context
+  const [availableRewards, setAvailableRewards] = useState([]); // Rewards from API
+  const [loading, setLoading] = useState(true); // Loading state
 
-  const [availableRewards] = useState([
-    { id: 1, name: 'Local Coffee Shop Discount', cost: 100 },
-    { id: 2, name: 'Grocery Store Voucher', cost: 250 },
-    { id: 3, name: 'Eco-friendly Water Bottle', cost: 500 },
-  ]);
+  // Fetch rewards from API on component mount
+  useEffect(() => {
+    const fetchRewards = async () => {
+      const token = localStorage.getItem('token'); // Retrieve token from localStorage
+      if (!token) {
+        console.error('No token found. Please log in.');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const rewards = await getRewards({ Authorization: `Token ${token}` }); // Fetch rewards with token
+        setAvailableRewards(rewards);
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to fetch rewards:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchRewards();
+  }, []);
 
   const handleRedeem = (reward) => {
-    if (user.credits >= reward.cost) {
+    if (user.credits >= reward.points) {
       alert(`You have redeemed: ${reward.name}`);
       // Deduct reward cost from user credits (would normally involve an API call here)
     } else {
@@ -34,23 +54,29 @@ const RewardsPage = () => {
       {/* Rewards List */}
       <div className="mt-6">
         <h3 className="text-lg font-semibold mb-4">Redeem Rewards</h3>
-        {availableRewards.map((reward) => (
-          <div
-            key={reward.id}
-            className="bg-white p-4 rounded-lg mb-3 flex justify-between items-center shadow-sm"
-          >
-            <div>
-              <h4 className="font-medium">{reward.name}</h4>
-              <p className="text-sm text-gray-600">{reward.cost} credits</p>
-            </div>
-            <button
-              className="bg-blue-500 text-white px-3 py-1 rounded"
-              onClick={() => handleRedeem(reward)}
+        {loading ? (
+          <p>Loading rewards...</p>
+        ) : availableRewards.length > 0 ? (
+          availableRewards.map((reward) => (
+            <div
+              key={reward.id}
+              className="bg-white p-4 rounded-lg mb-3 flex justify-between items-center shadow-sm"
             >
-              Redeem
-            </button>
-          </div>
-        ))}
+              <div>
+                <h4 className="font-medium">{reward.name}</h4>
+                <p className="text-sm text-gray-600">{reward.points} credits</p>
+              </div>
+              <button
+                className="bg-blue-500 text-white px-3 py-1 rounded"
+                onClick={() => handleRedeem(reward)}
+              >
+                Redeem
+              </button>
+            </div>
+          ))
+        ) : (
+          <p>No rewards available at the moment.</p>
+        )}
       </div>
     </div>
   );

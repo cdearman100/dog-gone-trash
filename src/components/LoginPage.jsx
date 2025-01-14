@@ -1,25 +1,52 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from './AuthProvider';
+import { loginUser, createUser } from '../api/usersApi';
 
 const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
+  const [fullName, setFullName] = useState('');
   const { login } = useContext(AuthContext);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const userData = {
-      email,
-      name: isLogin ? 'Community Member' : name,
-      credits: 1245,
-      pickupsCompleted: 12,
-      communityImpact: 37,
-    };
-    login(userData);
+  
+    if (isLogin) {
+      try {
+        const credentials = { email, password };
+        const userData = await loginUser(credentials);
+  
+        // Save the token in localStorage
+        localStorage.setItem('token', userData.token);
+  
+        // Log the token for debugging
+        console.log("Token saved to localStorage:", userData.token);
+  
+        // Log the user in on success
+        login(userData);
+        alert('Login successful!');
+      } catch (err) {
+        console.error("Login error:", err);
+        alert(err.detail || 'Login failed. Please check your credentials.');
+      }
+    } else {
+      try {
+        const newUser = {
+          email,
+          password,
+          full_name: fullName,
+          reward_points: 0,
+        };
+        await createUser(newUser);
+        alert('Account created successfully. You can now log in.');
+        setIsLogin(true);
+      } catch (error) {
+        console.error('Error creating account:', error);
+        alert('Failed to create account. Please try again.');
+      }
+    }
   };
-
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6 text-center">
@@ -30,8 +57,8 @@ const LoginPage = () => {
           <input
             type="text"
             placeholder="Full Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
             className="w-full p-2 border rounded"
             required={!isLogin}
           />
