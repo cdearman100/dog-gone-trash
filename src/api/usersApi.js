@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const BASE_API_URL = 'http://127.0.0.1:8000/api/';
+// If REACT_APP_API_URL is set, use it; otherwise fallback to local dev
+const BASE_API_URL = process.env.REACT_APP_API_URL
+  ? process.env.REACT_APP_API_URL
+  : 'http://127.0.0.1:8000/api/';
 
 export const getUsers = async (headers = {}) => {
   const response = await axios.get(`${BASE_API_URL}users/`, { headers });
@@ -32,7 +35,7 @@ export const loginUser = async (credentials) => {
     const response = await axios.post(`${BASE_API_URL}login/`, credentials);
     return response.data;
   } catch (error) {
-    console.error("Login error:", error.response);
+    console.error('Login error:', error.response);
     throw error.response ? error.response.data : { detail: 'An error occurred' };
   }
 };

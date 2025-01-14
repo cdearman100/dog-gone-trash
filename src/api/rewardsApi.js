@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_URL = 'http://127.0.0.1:8000/api/rewards/';
+// If REACT_APP_API_URL is not defined, default to local dev URL
+const API_URL = process.env.REACT_APP_API_URL
+  ? `${process.env.REACT_APP_API_URL}rewards/`
+  : 'http://127.0.0.1:8000/api/rewards/';
 
 export const getRewards = async (headers = {}) => {
   const response = await axios.get(API_URL, { headers });
